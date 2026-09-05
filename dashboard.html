@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#10b981">
+    <meta name="description" content="Elirox Auto Trading Bot">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%2310b981' width='192' height='192'/><text x='50%' y='50%' font-size='100' fill='white' text-anchor='middle' dy='.3em'>🤖</text></svg>">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ELIROX BOT">
+    <title>ELIROX BOT - Auto Trading</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 10px;
+            padding-top: max(10px, env(safe-area-inset-top));
+            padding-bottom: max(10px, env(safe-area-inset-bottom));
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        
+        .status-live {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #fbbf24;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+            margin-right: 6px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        .status-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .status-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .status-label {
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .status-value {
+            color: #10b981;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .trades-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .trades-section h2 {
+            color: #10b981;
+            font-size: 14px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .trade-card {
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 3px solid #10b981;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+        
+        .trade-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        
+        .trade-symbol {
+            color: #e2e8f0;
+        }
+        
+        .buy { color: #10b981; background: rgba(16, 185, 129, 0.2); padding: 2px 6px; border-radius: 4px; }
+        .sell { color: #ef4444; background: rgba(239, 68, 68, 0.2); padding: 2px 6px; border-radius: 4px; }
+        
+        .trade-detail {
+            display: flex;
+            justify-content: space-between;
+            color: #cbd5e1;
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+        
+        .pnl-positive { color: #10b981; }
+        .pnl-negative { color: #ef4444; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-stop {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+        
+        .btn-stop:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+        
+        .btn-start {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .btn-start:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 11px;
+            color: #64748b;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 360px) {
+            .header h1 {
+                font-size: 20px;
+            }
+            .stat-number {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1><span class="status-live"></span>🤖 ELIROX BOT</h1>
+            <p style="font-size: 12px; opacity: 0.9;">Auto Trading - Wall Bounce</p>
+        </div>
+        
+        <!-- STATUS -->
+        <div class="status-box">
+            <div class="status-row">
+                <span class="status-label">Bot Status</span>
+                <span class="status-value">🟢 RUNNING</span>
+            </div>
+            <div class="status-row">
+                <span class="status-label">Strategy</span>
+                <span class="status-value">Wall Bounce</span>
+            </div>
+            <div class="status-row">
+                <span class="status-label">Risk Per Trade</span>
+                <span class="status-value">1%</span>
+            </div>
+            <div class="status-row">
+                <span class="status-label">Lot Size</span>
+                <span class="status-value" id="lot-size">0.01 (Dynamic)</span>
+            </div>
+            <div class="status-row">
+                <span class="status-label">Account Balance</span>
+                <span class="status-value" id="account-balance">$2.00</span>
+            </div>
+            <div class="status-row">
+                <span class="status-label">Trades Today</span>
+                <span class="status-value" id="trades-count">0 / 3</span>
+            </div>
+        </div>
+        
+        <!-- STATS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="daily-pnl">+$0.00</div>
+                <div class="stat-label">Daily P&L</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="win-rate">0%</div>
+                <div class="stat-label">Win Rate</div>
+            </div>
+        </div>
+        
+        <!-- LIVE TRADES -->
+        <div class="trades-section">
+            <h2>📊 Live Trades</h2>
+            <div id="trades-container">
+                <div class="empty-state">
+                    <p>⏳ Waiting for setup...</p>
+                    <p style="font-size: 11px; margin-top: 5px;">Checking market every 5 minutes</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CONTROLS -->
+        <div class="controls">
+            <button class="btn-stop" onclick="stopBot()">⏹️ STOP</button>
+            <button class="btn-start" onclick="startBot()">▶️ START</button>
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>🚀 Elirox Auto Bot v2</p>
+            <p style="margin-top: 5px; opacity: 0.7;">Deriv • Koyeb • Telegram Alerts</p>
+        </div>
+    </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js').catch(() => {});
+        }
+        
+        function stopBot() {
+            alert('Bot paused. Restart from Koyeb dashboard.');
+        }
+        
+        function startBot() {
+            alert('Bot resuming. Check Telegram for alerts.');
+        }
+        
+        function displayTrade(symbol, bias, entry, tp, sl, pnl) {
+            const container = document.getElementById('trades-container');
+            if (container.querySelector('.empty-state')) {
+                container.innerHTML = '';
+            }
+            const card = document.createElement('div');
+            card.className = 'trade-card';
+            card.innerHTML = `
+                <div class="trade-header">
+                    <span class="trade-symbol">${symbol}</span>
+                    <span class="${bias.toLowerCase()}">${bias}</span>
+                </div>
+                <div class="trade-detail">
+                    <span>Entry: ${entry.toFixed(2)}</span>
+                    <span>SL: ${sl.toFixed(2)}</span>
+                </div>
+                <div class="trade-detail">
+                    <span>TP: ${tp.toFixed(2)}</span>
+                    <span class="${pnl >= 0 ? 'pnl-positive' : 'pnl-negative'}">
+                        ${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}
+                    </span>
+                </div>
+            `;
+            container.appendChild(card);
+        }
+    </script>
+</body>
+  </html>
