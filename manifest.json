@@ -1,0 +1,49 @@
+{
+  "name": "ELIROX Auto Trading Bot",
+  "short_name": "ELIROX BOT",
+  "description": "Automated trading bot with Wall Bounce Stacking strategy on Deriv",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#10b981",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%2310b981' width='192' height='192'/><text x='50%' y='50%' font-size='100' fill='white' text-anchor='middle' dy='.3em'>🤖</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%2310b981' width='512' height='512'/><text x='50%' y='50%' font-size='300' fill='white' text-anchor='middle' dy='.3em'>🤖</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "productivity"],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%230f172a' width='540' height='720'/><text x='270' y='360' font-size='80' fill='%2310b981' text-anchor='middle' dy='.3em'>ELIROX</text></svg>",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Start Bot",
+      "short_name": "Start",
+      "description": "Start auto trading bot",
+      "url": "/?action=start",
+      "icons": []
+    },
+    {
+      "name": "View Trades",
+      "short_name": "Trades",
+      "description": "View live trades and P&L",
+      "url": "/?action=trades",
+      "icons": []
+    }
+  ]
+}
